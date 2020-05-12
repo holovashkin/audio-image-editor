@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Speechly - App</title>
+
+  <link rel="stylesheet" href="./css/layout.css">
+</head>
+<body>
+
+  <section class="app">
+    <a class="app-logo" href="./index.html"><img src="./img/app-logo.png" alt=""></a>
+    <section class="photo">
+
+      <canvas id = "canvas" width="1440" height="740">
+        <p>Canvas not supported</p>
+      </canvas>
+
+      <!--  -->
+
+    </section>
+
+    <section class="actionsHistory">
+      <p>Add more luminosity</p>
+      <p>Luminosity added</p>
+    </section>
+
+    <section class="controls">
+        <button class="more"></button>
+        <button class="micro"></button>
+        <button class="guides"></button>
+    </section>
+
+      <p>Press and hold space bar to talk</p>
+
+  </section>
+
+  <script>
+  // Canvas Draw Image (cover style) for demo
+
+  /*--------------------
+  Setup
+  --------------------*/
+  const canvas = document.getElementById('canvas')
+  const ctx = canvas.getContext('2d')
+  const win = {
+    w: window.innerWidth,
+    h: window.innerHeight,
+  }
+  const img = new Image()
+
+
+  /*--------------------
+  Cover Image
+  --------------------*/
+  const coverImg = (img, type = 'cover') => {
+    const imgRatio = img.height / img.width
+    const winRatio = window.innerHeight / window.innerWidth
+    if ((imgRatio < winRatio && type === 'contain') || (imgRatio > winRatio && type === 'cover')) {
+      const h = window.innerWidth * imgRatio
+      ctx.drawImage(img, 0, (window.innerHeight - h) / 2, window.innerWidth, h)
+    }
+    if ((imgRatio > winRatio && type === 'contain') || (imgRatio < winRatio && type === 'cover')) {
+      const w = window.innerWidth * winRatio / imgRatio
+      ctx.drawImage(img, (win.w - w) / 2, 0, w, window.innerHeight)
+    }
+  }
+
+
+  /*--------------------
+  Render
+  --------------------*/
+  const render = () => {
+    ctx.clearRect(0, 0, win.w, win.h)
+    const type = 'cover'
+    coverImg(img, type)
+    requestAnimationFrame(render)
+  }
+
+
+  /*--------------------
+  Init
+  --------------------*/
+  const init = () => {
+    resize()
+    render()
+  }
+
+
+  /*--------------------
+  Preload Image
+  --------------------*/
+  const imgSrc = './img/lg.png'
+  img.onload = init
+  img.src = imgSrc
+
+
+  /*--------------------
+  Resize
+  --------------------*/
+  const resize = () => {
+    win.w = window.innerWidth
+    win.h = window.innerHeight
+    canvas.width = win.w
+    canvas.height = win.h
+    canvas.style.width = `${win.w}px`
+    canvas.style.height = `${win.h}px - 60px`
+  }
+  window.addEventListener('resize', init)
+  </script>
+</body>
+</html>
